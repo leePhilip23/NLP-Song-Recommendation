@@ -1,0 +1,45 @@
+/* styles.css */
+
+/* Add Material Design styles here */
+/* For example, let's change the primary color to blue */
+:root {
+    --primary-color: #2196F3;
+    --primary-light-color: #64B5F6;
+    --primary-dark-color: #1976D2;
+}
+
+/* Customize the input field */
+.css-1aumxhk {
+    border: 2px solid var(--primary-color) !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+}
+
+/* Customize the submit button */
+.css-1v4eu6x {
+    background-color: var(--primary-color) !important;
+    border-radius: 8px !important;
+    padding: 12px 24px !important;
+    color: white !important;
+    font-weight: bold !important;
+    height: 40px !important;
+}
+
+/* Center the submit button */
+.css-1v4eu6x::before {
+    display: none !important;
+}
+.css-1v4eu6x::after {
+    display: none !important;
+}
+
+/* Increase font size for title */
+h1 {
+    font-size: 36px !important;
+}
+
+/* Increase font size for input field and submit button */
+.css-1aumxhk, .css-1v4eu6x {
+    font-size: 18px !important;
+}
+
