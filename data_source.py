@@ -1,96 +1,98 @@
-from newsapi import NewsApiClient
+from newsdataapi import NewsDataApiClient
 import psycopg2 
-import requests
+import re
 
-# API Keys and Enpoints (URL)
-API_KEY = 'SECRET KEY'
-API_ENDPOINT_HEADLINES = 'https://newsapi.org/v2/top-headlines'
-API_ENDPOINT_EVERYTHING = 'https://newsapi.org/v2/everything'
-API_ENDPOINT_SOURCES = 'https://newsapi.org/v2/top-headlines/sources'
-
-# Create table query
-create = f"""
-            CREATE TABLE IF NOT EXISTS news (
-               title          varchar(512),
-               news_company   varchar(30),
-               news_url       text,
-               story          text
-            )
-         """
-
-# Insert query
-insert = f"""
-            INSERT INTO 
-               news(title, news_company, news_url, story)
-               VALUES(%s, %s, %s, %s)
-         """
-
-# Establish connection to Postgres server and database
-connection = psycopg2.connect(
-      host='localhost',
-      port='5432',
-      user='postgres',
-      database='articles',
-      password='articlenlp'
-   )
-
-# Create connection to Postgres
-cursor = connection.cursor()
-
-# Create NewsApi object
-newsapi = NewsApiClient(api_key=API_KEY)
-
-# Get all links
-def get_links():
+# Get all data
+def get_data(api):
    # Store sources and domains
-   sources = []
-   domains = []
+   categories = [
+      'entertainment',
+      'environment',
+      'food',
+      'health',
+      'politics',
+      'science',
+      'sports',
+      'technology',
+      'tourism',
+      'world'
+   ]
 
-   # Establish link to NewsApi to get all sources and domains
-   links = newsapi.get_sources()
+   # Get news from 10 countries with highest GDP
+   countries = [
+      'us',
+      'cn',
+      'jp',
+      'de',
+      'gb',
+      'in',
+      'fr',
+      'it',
+      'ca',
+      'kr'
+   ]
 
+   titles = []
+   stories = []
+   language = 'en'
    # Get all sources and domains
-   for data in links['sources']:
-      if data['language'] == 'en':
-         sources.append(data['id'])
-         domains.append(data['url'])
+   for country in countries:
+      for category in categories:
+         response = api.news_api(country=country, category=category, language=language)
+         results = response['results']
 
-   return sources, domains
-   
+         for r in results:
+            title = r['title']
+            story = r['content']
 
-# Get the news article
-def get_data(sources_, domains_):
+            # Add titles and stories
+            titles.append(title)
+            stories.append(story)
 
-    # All articles for every source and domain
-    all_articles = newsapi.get_everything(sources=sources_,
-                                          domains=domains_,
-                                          language='en',
-                                          sort_by='relevancy')
-    
-    return all_articles['articles']
 
-# Get all sources and domains
-sources, domains = get_links()
+   return titles, stories
 
-# Create new table if it doesn't exist
-cursor.execute(create) 
+def put_into_postgres(titles, stories):
+   # Create table query
+   create = f"""
+               CREATE TABLE IF NOT EXISTS news (
+                  title          varchar(512),
+                  story          text
+               )
+            """
 
-# Gather and print the title, news company, and news url of all the articles
-for s, d in zip(sources, domains):
-   data = get_data(s, d)
-   for i, article in enumerate(data):
-      # Get the title, company name, url, story, and place them in values tuple
-      title = article['title']
-      news_company = article['source']['name']
-      news_url = article['url']
-      story = article['content']
-      values = (title, news_company, news_url, story)
+   # Insert query
+   insert = f"""
+               INSERT INTO news(title, story)
+               VALUES(%s, %s)
+            """
 
+   # Establish connection to Postgres server and database
+   connection = psycopg2.connect(
+         host='localhost',
+         port='5432',
+         user='postgres',
+         database='articles',
+         password='articlenlp'
+      )
+
+   # Create connection to Postgres
+   cursor = connection.cursor()
+
+   # Create new table if it doesn't exist
+   cursor.execute(create) 
+
+   count = 1
+   # Gather and print the title, news company, and news url of all the articles
+
+   print(len(stories), len(titles))
+   for title, story in zip(titles, stories):
       # Print all values
-      print(f"{i + 1}. Title: {title}") 
-      print(f"   News Company: {news_company}") 
-      print(f"   Main News URL: {news_url}") 
+      print(f"{count}. Title: {title}") 
       print(f"   Description: {story}")
+
+      # Put into tuple
+      values = (title, story)
 
       # Add values to the table
       cursor.execute(insert, values)
@@ -98,5 +100,22 @@ for s, d in zip(sources, domains):
       # Makes sure every SQL statement is properly executed
       connection.commit()
 
-# Close connection to Postgres
-cursor.close()
+      count += 1
+
+   # Close connection to Postgres
+   cursor.close()
+
+
+def main():
+   # API key authorization, Initialize the client with your API key
+   apikey = "pub_27073a2172674a00137ba70f975235a89d430"
+   api = NewsDataApiClient(apikey=apikey)
+
+   # Get all sources and domains
+   titles, stories = get_data(api)
+
+   put_into_postgres(titles, stories)
+
+
+if __name__ == "__main__":
+    main()
