@@ -108,8 +108,8 @@ def put_into_postgres(titles, stories):
 
 def main():
    # API key authorization, Initialize the client with your API key
-   apikey = "pub_27073a2172674a00137ba70f975235a89d430"
-   api = NewsDataApiClient(apikey=apikey)
+   SECRET_KEY = 'SECRET_KEY'
+   api = NewsDataApiClient(apikey=SECRET_KEY)
 
    # Get all sources and domains
    titles, stories = get_data(api)
