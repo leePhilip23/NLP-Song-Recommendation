@@ -1,11 +1,11 @@
 
 
 .App {
-  height: 900px;
-  overflow: hidden;
+  min-height: 55.7rem;
+  height: 100%;
   display: flex;
   flex-direction: column;
-
+  font-family: 'Roboto', sans-serif;
   text-align: center;
   padding: 20px;
   background-color: var(--background-color);
@@ -53,19 +53,28 @@
   cursor: pointer;
   border-radius: 10px;
   width: 15%;
-}
-
-.Summarize-button-text {
-  font-weight: bold;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
 }
 
 .Summary-result {
-  margin-top: 20px;
-  width: 50%;
+  margin-top: 25px;
+  width: 50em;
   border: 1px solid black;
   border-radius: 5px;
   background-color: white;
   color: black;
+  min-height: 50px;
+  display: flex;
+  justify-content: left;
+  text-align: left;
+  padding: 1em 1em 1em 1em;
+  margin-bottom: 5rem;
+}
+
+.result-holder {
+  display: flex;
+  justify-content: left;
 }
 
 :root {

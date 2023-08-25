@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+# import time # use to test loading animation
 
 app = FastAPI()
 
@@ -23,8 +24,8 @@ stored_text = ""
 async def post_text(request_data: dict):
     global stored_text
     stored_text = request_data.get("text", "")
-    return {"summary": "Apples are one of the most iconic and widely enjoyed fruits, cherished for their crisp texture and sweet-tart flavor. With a diverse range of varieties available, from the classic Red Delicious to the tangy Granny Smith, there's an apple to suit every palate. These fruit gems are not only delicious but also packed with nutritional benefits. Apples are a great source of dietary fiber, vitamins, and antioxidants, making them a wholesome choice for maintaining a healthy lifestyle. Whether enjoyed as a quick snack, sliced into salads, or baked into pies, the versatility of apples knows no bounds. From orchards to kitchen tables, apples remain a symbol of freshness, vitality, and culinary delight."}
-
+    # time.sleep(1) # use to test loading animation
+    return {"summary": stored_text}
 @app.get("/get_text/")
 async def get_text():
     if stored_text:

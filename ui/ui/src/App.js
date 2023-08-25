@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import Loader from './loader';
 import './App.css';
 
 function App() {
   const [inputText, setInputText] = useState('');
   const [summary, setSummary] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (event) => {
     setInputText(event.target.value);
@@ -16,6 +18,7 @@ function App() {
   
 
   const handleSummarizeClick = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch('http://127.0.0.1:8000/post_text', {
         method: 'POST',
@@ -27,6 +30,7 @@ function App() {
 
       const data = await response.json();
       setSummary(data.summary);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -55,12 +59,21 @@ function App() {
         />
         
         <button className="Summarize-button" onClick={handleSummarizeClick}>
-          <div Summarize-button-text>
+          <div classname="Summarize-button-text">
             Summarize
           </div>
-          
         </button>
-        {summary && <div className="Summary-result">{summary}</div>}
+        {(summary )? (
+          <div>
+            <h3 className="result-holder">Summary</h3>
+            <div className="Summary-result">
+            {summary}
+          </div>
+        </div>
+        ) : ( isLoading &&
+          <Loader />
+        )}
+
       </main>
     </div>
   );
