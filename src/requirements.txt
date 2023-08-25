@@ -1,2 +1,10 @@
 streamlit
 nltk
+pandas
+numpy
+tokenizer
+transformers
+jsonlines
+datasets
+peft
+spacy 
