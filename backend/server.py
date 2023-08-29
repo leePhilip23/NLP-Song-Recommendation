@@ -1,7 +1,9 @@
+from webbrowser import get
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-# import time # use to test loading animation
+from ML import get_summary, get_article
 
+# import time # use to test loading animation
 app = FastAPI()
 
 origins = [
@@ -18,14 +20,17 @@ app.add_middleware(
 )
 
 # Variable to store posted text
-stored_text = ""
+stored_test = ""
 
 @app.post("/post_text/")
 async def post_text(request_data: dict):
     global stored_text
     stored_text = request_data.get("text", "")
+    article = get_article(stored_text)
+    summary = get_summary(article)
     # time.sleep(1) # use to test loading animation
-    return {"summary": stored_text}
+    return {"summary": summary}
+
 @app.get("/get_text/")
 async def get_text():
     if stored_text:
