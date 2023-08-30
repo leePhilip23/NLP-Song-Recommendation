@@ -2,4 +2,4 @@
 
 Summarizes thousands of news articles so that users don't have to waste time reading.
 
-Note: On going project
+Updates to documentation will be updated soon...
