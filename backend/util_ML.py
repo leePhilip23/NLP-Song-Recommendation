@@ -10,7 +10,7 @@ import os
 # os.environ["KMP_DUPLICATE_LIB_OK"]="True" # Only for MAC OS
 '''
 # Model Id and Token Id used
-model_id = "../backend/Flan-T5-Small_Lora"
+model_id = "Flan-T5-Small_Lora"
 token_id  = "google/flan-t5-small"
 
 # Load model and tokenizer
