@@ -5,4 +5,3 @@ Summarizes thousands of news articles so that users don't have to waste time rea
 Future Updates:
   - Implementations of Langchain
   - Documentation
-  - Jupyter Notebook to train Flan-T5-Small LoRA model
